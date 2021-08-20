@@ -1,0 +1,33 @@
+name: pi-hole
+components:
+- id: main
+  capabilities:
+    - id: switch
+      version: 1
+    - id: pianobook11249.blockPercent
+      version: 1
+    - id: pianobook11249.blockedQueries
+      version: 1
+    - id: pianobook11249.totalQueries
+      version: 1
+    - id: refresh
+      version: 1
+  categories:
+  - name: RemoteController
+preferences:
+  - title: "IP Address"
+    description: "IP address of the Pi-Hole"
+    required: true
+    preferenceType: string
+    definition:
+      minLength: 7
+      maxLength: 15
+      stringType: text
+      default: ""
+  - title: "Webpassword"
+    description: "The webpassword for auth with the Pi-Hole API"
+    required: true
+    preferenceType: string
+    definition:
+      stringType: text
+      default: ""

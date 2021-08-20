@@ -1,0 +1,13 @@
+dashboard:
+  states:
+    - label: '{{totalQueries.value}}'
+      alternatives: []
+  actions: []
+  basicPlus: []
+detailView:
+  - label: Total Queries
+    displayType: state
+    state:
+      label: "{{totalQueries.value}}"
+id: pianobook11249.totalQueries
+version: 1

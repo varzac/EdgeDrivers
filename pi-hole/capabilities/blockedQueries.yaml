@@ -1,0 +1,16 @@
+id: pianobook11249.blockedQueries
+version: 1
+status: proposed
+name: Blocked Queries
+attributes:
+  blockedQueries:
+    schema:
+      type: object
+      properties:
+        value:
+          type: integer
+      additionalProperties: false
+      required:
+        - value
+    enumCommands: []
+commands: {}

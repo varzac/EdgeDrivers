@@ -1,0 +1,13 @@
+dashboard:
+  states:
+    - label: '{{blockPercent.value}}'
+      alternatives: []
+  actions: []
+  basicPlus: []
+detailView:
+  - label: Block Percent
+    displayType: state
+    state:
+      label: "{{blockPercent.value}}{{blockPercent.unit}}"
+id: pianobook11249.blockPercent
+version: 1
