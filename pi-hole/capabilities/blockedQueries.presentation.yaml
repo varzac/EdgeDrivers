@@ -1,0 +1,13 @@
+dashboard:
+  states:
+    - label: '{{blockedQueries.value}}'
+      alternatives: []
+  actions: []
+  basicPlus: []
+detailView:
+  - label: Blocked Queries
+    displayType: state
+    state:
+      label: "{{blockedQueries.value}}"
+id: pianobook11249.blockedQueries
+version: 1

@@ -1,0 +1,24 @@
+id: pianobook11249.blockPercent
+version: 1
+status: proposed
+name: Block Percent
+attributes:
+  blockPercent:
+    schema:
+      type: object
+      properties:
+        value:
+          type: integer
+          minimum: 0
+          maximum: 100
+        unit:
+          type: string
+          enum:
+            - '%'
+          default: '%'
+      additionalProperties: false
+      required:
+        - value
+    enumCommands: []
+commands:
+  {}

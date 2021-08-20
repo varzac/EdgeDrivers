@@ -10,6 +10,7 @@ to accept my invite, enroll your hub, and install any of these drivers.
 
 ## Drivers
 
+* [**PiHole**](pi-hole/README.md): A driver for connecting a PiHole to SmartThings
 
 ## Contributing
 
