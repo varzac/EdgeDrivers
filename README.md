@@ -11,6 +11,8 @@ to accept my invite, enroll your hub, and install any of these drivers.
 ## Drivers
 
 * [**PiHole**](pi-hole/README.md): A driver for connecting a PiHole to SmartThings
+* [**Xiaomi Sensors**](xiaomi-sensor/README.md): A driver for one model of Xiaomi motion and
+  contact sensors
 
 ## Contributing
 
@@ -19,3 +21,4 @@ Submit pull requests or issues as you find bugs or want to add functionality.
 ## License
 
 See the [LICENSE](LICENSE).
+

@@ -1,0 +1,4 @@
+name: 'Xiaomi Sensors'
+packageKey: 'xiaomi-sensors'
+permissions:
+  zigbee: {}

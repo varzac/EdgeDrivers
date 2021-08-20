@@ -1,0 +1,11 @@
+zigbeeManufacturer:
+  - id: "LUMI/lumi.sensor_motion"
+    deviceLabel: Xiaomi Motion
+    manufacturer: LUMI
+    model: lumi.sensor_motion
+    deviceProfileName: motion-battery
+  - id: "LUMI/lumi.sensor_magnet"
+    deviceLabel: Xiaomi Contact
+    manufacturer: LUMI
+    model: lumi.sensor_magnet
+    deviceProfileName: contact-battery
