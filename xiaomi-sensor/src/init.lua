@@ -50,7 +50,7 @@ local occupancy_handler = function(self, device, value)
   end
 end
 
-local xiaomi_sensors_prototype = {
+local xiaomi_devices_prototype = {
   supported_capabilities = {
     capabilities.button,
     capabilities.motionSensor,
@@ -75,7 +75,8 @@ local xiaomi_sensors_prototype = {
       }
     }
   },
+  sub_drivers = { require("xiaomi_button") }
 }
 
-local xiaomi_sensors = ZigbeeDriver("xiaomi-motion", xiaomi_sensors_prototype)
+local xiaomi_sensors = ZigbeeDriver("xiaomi-devices", xiaomi_devices_prototype)
 xiaomi_sensors:run()
