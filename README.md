@@ -13,6 +13,7 @@ to accept my invite, enroll your hub, and install any of these drivers.
 * [**PiHole**](pi-hole/README.md): A driver for connecting a PiHole to SmartThings
 * [**Xiaomi Sensors**](xiaomi-sensor/README.md): A driver for one model of Xiaomi motion and
   contact sensors
+* [**Xiaomi/Aqara Button**](xiaomi-button/README.md): A driver for one model of Xiaomi/Aqara button
 
 ## Contributing
 

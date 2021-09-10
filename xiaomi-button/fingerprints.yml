@@ -1,0 +1,6 @@
+zigbeeManufacturer:
+  - id: "LUMI/lumi.sensor_switch.aq2"
+    deviceLabel: Aqara Button
+    manufacturer: LUMI
+    model: lumi.sensor_switch.aq2
+    deviceProfileName: button-battery

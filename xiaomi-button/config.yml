@@ -1,0 +1,4 @@
+name: 'Xiaomi/Aqara Button'
+packageKey: 'xiaomi-button'
+permissions:
+  zigbee: {}
