@@ -1,7 +1,7 @@
 # Xiaomi Sensor EdgeDriver
 
-This is my personal SmartThings edge driver for early versions of Xiaomi
-open close and motion sensors.
+This is my personal SmartThings edge driver for early versions of Xiaomi/Aqara
+contact and motion sensors, as well as the Xiaomi/Aqara button.
 
 ## Installing the driver
 

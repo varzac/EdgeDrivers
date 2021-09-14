@@ -13,12 +13,25 @@
 -- limitations under the License.
 local test = require "integration_test"
 local zigbee_test_utils = require "integration_test.zigbee_test_utils"
-local OccupancySensing = (require "st.zigbee.zcl.clusters").OccupancySensing
+local OnOff = (require "st.zigbee.zcl.clusters").OnOff
 local data_types = require "st.zigbee.data_types"
-local capabilities = require "st.capabilities"
 local t_utils = require "integration_test.utils"
+local capabilities = require "st.capabilities"
 
-local mock_device = test.mock_device.build_test_zigbee_device({ profile = t_utils.get_profile_definition("motion-battery.yml") })
+local mock_device = test.mock_device.build_test_zigbee_device(
+    {
+      profile =  t_utils.get_profile_definition("button-battery.yml"),
+      zigbee_endpoints = {
+        [1] = {
+          id = 1,
+          client_clusters = {0x0000, 0x0004, 0xFFFF},
+          server_clusters = {0x0000, 0x0006, 0xFFFF},
+          manufacturer = "LUMI",
+          model = "lumi.sensor_switch.aq2",
+        }
+      }
+    }
+)
 zigbee_test_utils.prepare_zigbee_env_info()
 local function test_init()
   test.mock_device.add_test_device(mock_device)
@@ -28,56 +41,37 @@ test.set_test_init_function(test_init)
 
 
 test.register_message_test(
-    "Reported motion should be handled: active",
+    "Reported pressed should turn on",
     {
       {
         channel = "zigbee",
         direction = "receive",
-        message = { mock_device.id, OccupancySensing.attributes.Occupancy:build_test_attr_report(mock_device, 0x01) }
+        message = { mock_device.id, OnOff.attributes.OnOff:build_test_attr_report(mock_device, true) }
       },
       {
         channel = "capability",
         direction = "send",
-        message = mock_device:generate_test_message("main", capabilities.motionSensor.motion.active())
+        message = mock_device:generate_test_message("main", capabilities.button.button.pushed({state_change = true}))
       }
     }
 )
 
 test.register_coroutine_test(
-    "Motion should only report stopped after timer expires",
+    "Reported pressed should turn on two values",
     function()
-      test.timer.__create_and_queue_test_time_advance_timer(10, "oneshot")
-      test.socket.zigbee:__queue_receive({ mock_device.id, OccupancySensing.attributes.Occupancy:build_test_attr_report(mock_device, 0x01) })
-      test.socket.capability:__expect_send(mock_device:generate_test_message("main", capabilities.motionSensor.motion.active()))
-      test.wait_for_events()
-      test.mock_time.advance_time(80)
-      test.socket.capability:__expect_send(mock_device:generate_test_message("main", capabilities.motionSensor.motion.inactive()))
+      --attr_id, data_type, value
+      local zb_mess = zigbee_test_utils.build_attribute_report(
+          mock_device, 0x0006,
+          {
+            { 0x0000, data_types.Boolean.ID, false },
+            { 0x0000, data_types.Boolean.ID, true }
+          }
+      )
+      test.socket.zigbee:__queue_receive({mock_device.id, zb_mess})
+      test.socket.capability:__expect_send(mock_device:generate_test_message("main", capabilities.button.button.pushed({state_change = true})))
     end
 )
 
-test.register_coroutine_test(
-    "Motion stop timer should be cancelled on additional motion",
-    function()
-      local cancel_called = false
-      local motion_inactive_timer = test.timer.__create_and_queue_test_time_advance_timer(10, "oneshot")
-      motion_inactive_timer.cancel = function(...)
-        cancel_called = true
-      end
-      test.socket.zigbee:__queue_receive({ mock_device.id, OccupancySensing.attributes.Occupancy:build_test_attr_report(mock_device, 0x01) })
-      test.socket.capability:__expect_send(mock_device:generate_test_message("main", capabilities.motionSensor.motion.active()))
-      test.wait_for_events()
-
-      if cancel_called then
-        error({ code = t_utils.UNIT_TEST_FAILURE, msg="Timer should be active", fatal = true})
-      end
-      test.socket.zigbee:__queue_receive({ mock_device.id, OccupancySensing.attributes.Occupancy:build_test_attr_report(mock_device, 0x01) })
-      test.socket.capability:__expect_send(mock_device:generate_test_message("main", capabilities.motionSensor.motion.active()))
-      test.wait_for_events()
-      if not cancel_called then
-        error({ code = t_utils.UNIT_TEST_FAILURE, msg="After receiving another motion event the timer should be cancelled", fatal = true})
-      end
-    end
-)
 
 ----------------------------------------------------------------
 --- Battery handling

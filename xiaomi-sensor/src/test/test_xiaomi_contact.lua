@@ -16,20 +16,9 @@ local zigbee_test_utils = require "integration_test.zigbee_test_utils"
 local OnOff = (require "st.zigbee.zcl.clusters").OnOff
 local data_types = require "st.zigbee.data_types"
 local capabilities = require "st.capabilities"
+local t_utils = require "integration_test.utils"
 
-local xiaomi_contact_profile = {
-  components = {
-    main = {
-      capabilities = {
-        [capabilities.contactSensor.ID] = { id = capabilities.contactSensor.ID },
-        [capabilities.battery.ID] = { id = capabilities.battery.ID },
-      },
-      id = "main"
-    }
-  }
-}
-
-local mock_device = test.mock_device.build_test_zigbee_device({profile = xiaomi_contact_profile })
+local mock_device = test.mock_device.build_test_zigbee_device({profile = t_utils.get_profile_definition("contact-battery.yml") })
 zigbee_test_utils.prepare_zigbee_env_info()
 local function test_init()
   test.mock_device.add_test_device(mock_device)
