@@ -10,3 +10,12 @@ components:
     version: 1
   categories:
   - name: MotionSensor
+preferences:
+  - title: "No Motion Timeout"
+    name: noMotionTimeout
+    description: "The amount of time without motion report to "
+    required: true
+    preferenceType: integer
+    definition:
+      default: 75
+

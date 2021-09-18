@@ -13,14 +13,16 @@
 -- limitations under the License.
 local capabilities = require "st.capabilities"
 local ZigbeeDriver = require "st.zigbee"
+--- @type st.zigbee.zcl.clusters
 local zcl_clusters = require "st.zigbee.zcl.clusters"
+local PowerConfiguration = zcl_clusters.PowerConfiguration
+local OccupancySensing = zcl_clusters.OccupancySensing
 local OnOff = zcl_clusters.OnOff
 local xiaomi_utils = require "xiaomi-utils"
 
 local XIAOMI_MOTION_TIMER_KEY = "xiaomi_motion_timer"
-local no_motion_delay = 75
 
-local build_timer_callback = function(driver, device)
+local function build_timer_callback(driver, device)
   local motion_timer_callback = function()
     device:set_field(XIAOMI_MOTION_TIMER_KEY, nil)
     device:emit_event(capabilities.motionSensor.motion.inactive())
@@ -28,7 +30,7 @@ local build_timer_callback = function(driver, device)
   return motion_timer_callback
 end
 
-local on_off_contact_handler = function(self, device, value)
+local function on_off_contact_handler(self, device, value)
   device:emit_event(value.value and capabilities.contactSensor.contact.open() or capabilities.contactSensor.contact.closed())
 end
 
@@ -38,7 +40,7 @@ end
 -- it just stops reporting the attribute value of 0x01.  So this method will start a timer on a given
 -- device of 75 seconds every time it hears the occupancy report (cancelling any previous timer) and
 -- if that timer gets hit, we then report motion inactive.
-local occupancy_handler = function(self, device, value)
+local function occupancy_handler(self, device, value)
   if value.value == 0x01 then
     local motion_timer = device:get_field(XIAOMI_MOTION_TIMER_KEY)
     if motion_timer ~= nil then
@@ -46,7 +48,8 @@ local occupancy_handler = function(self, device, value)
       device:set_field(XIAOMI_MOTION_TIMER_KEY, nil)
     end
     device:emit_event(capabilities.motionSensor.motion.active())
-    device:set_field(XIAOMI_MOTION_TIMER_KEY, device.thread:call_with_delay(no_motion_delay, build_timer_callback(self, device)))
+    local no_motion_timeout = device.preferences.noMotionTimeout or 75
+    device:set_field(XIAOMI_MOTION_TIMER_KEY, device.thread:call_with_delay(no_motion_timeout, build_timer_callback(self, device)))
   end
 end
 
@@ -57,8 +60,6 @@ local xiaomi_devices_prototype = {
     capabilities.contactSensor,
     capabilities.battery,
   },
-  -- Prevent any default configuration or handlers from being used
-  use_defaults = false,
   zigbee_handlers = {
     global = {},
     cluster = {},
@@ -66,8 +67,8 @@ local xiaomi_devices_prototype = {
       [OnOff.ID] = {
         [OnOff.attributes.OnOff.ID] = on_off_contact_handler
       },
-      [zcl_clusters.OccupancySensing.ID] = {
-        [zcl_clusters.OccupancySensing.attributes.Occupancy.ID] = occupancy_handler
+      [OccupancySensing.ID] = {
+        [OccupancySensing.attributes.Occupancy.ID] = occupancy_handler
       },
       [zcl_clusters.basic_id] = {
         [0xFF02] = xiaomi_utils.battery_handler,
