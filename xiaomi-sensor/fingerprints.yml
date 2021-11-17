@@ -19,3 +19,8 @@ zigbeeManufacturer:
     manufacturer: LUMI
     model: lumi.sensor_switch.aq2
     deviceProfileName: button-battery
+  - id: "LUMI/lumi.airmonitor.acn01"
+    deviceLabel: Aqara Air Quality Sensor
+    manufacturer: LUMI
+    model: lumi.airmonitor.acn01
+    deviceProfileName: tvoc-temperature-humidity

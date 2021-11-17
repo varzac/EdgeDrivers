@@ -1,4 +1,4 @@
--- Copyright 2021 Zach Varberg, SmartThings
+-- Copyright 2021 Zach Varberg
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@ local zigbee_test_utils = require "integration_test.zigbee_test_utils"
 local data_types = require "st.zigbee.data_types"
 local capabilities = require "st.capabilities"
 local t_utils = require "integration_test.utils"
-local report_attr = require "st.zigbee.zcl.global_commands.report_attribute"
-local zcl_messages = require "st.zigbee.zcl"
+--- @type st.zigbee.zcl.clusters
+local zcl_clusters = require "st.zigbee.zcl.clusters"
 
-local mock_device = test.mock_device.build_test_zigbee_device({ profile = t_utils.get_profile_definition("tvoc-temperature-humidity.yml"), zigbee_endpoints ={ [1] = {id = 1, manufacturer ="LUMI", model ="lumi.airmonitor.acn01", server_clusters = {}} } })
+local mock_device = test.mock_device.build_test_zigbee_device({ profile = t_utils.get_profile_definition("tvoc-temperature-humidity.yml"), zigbee_endpoints ={ [1] = {id = 1, manufacturer ="LUMI", model ="lumi.airmonitor.acn01", server_clusters = {0x0405, 0x0402}} } })
 zigbee_test_utils.prepare_zigbee_env_info()
 local function test_init()
   test.mock_device.add_test_device(mock_device)
@@ -100,6 +100,38 @@ test.register_message_test(
                 message = mock_device:generate_test_message("main", capabilities.tvocHealthConcern.tvocHealthConcern("hazardous"))
             },
 
+        }
+)
+
+test.register_message_test(
+        "Temperature report should be handled",
+        {
+            {
+                channel = "zigbee",
+                direction = "receive",
+                message = { mock_device.id, zcl_clusters.TemperatureMeasurement.attributes.MeasuredValue:build_test_attr_report(mock_device, 2500) }
+            },
+            {
+                channel = "capability",
+                direction = "send",
+                message = mock_device:generate_test_message("main", capabilities.temperatureMeasurement.temperature({ value = 25.0, unit = "C" }))
+            }
+        }
+)
+
+test.register_message_test(
+        "Humidity report should be handled",
+        {
+            {
+                channel = "zigbee",
+                direction = "receive",
+                message = { mock_device.id, zcl_clusters.RelativeHumidity.attributes.MeasuredValue:build_test_attr_report(mock_device, 2500) }
+            },
+            {
+                channel = "capability",
+                direction = "send",
+                message = mock_device:generate_test_message("main", capabilities.relativeHumidityMeasurement.humidity({value = 25}))
+            }
         }
 )
 

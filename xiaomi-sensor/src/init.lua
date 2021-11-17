@@ -13,9 +13,10 @@
 -- limitations under the License.
 local capabilities = require "st.capabilities"
 local ZigbeeDriver = require "st.zigbee"
+local defaults = require "st.zigbee.defaults"
+local battery_defaults = require "st.zigbee.defaults.battery_defaults"
 --- @type st.zigbee.zcl.clusters
 local zcl_clusters = require "st.zigbee.zcl.clusters"
-local PowerConfiguration = zcl_clusters.PowerConfiguration
 local OccupancySensing = zcl_clusters.OccupancySensing
 local OnOff = zcl_clusters.OnOff
 local xiaomi_utils = require "xiaomi-utils"
@@ -59,6 +60,10 @@ local xiaomi_devices_prototype = {
     capabilities.motionSensor,
     capabilities.contactSensor,
     capabilities.battery,
+    capabilities.temperatureMeasurement,
+    capabilities.relativeHumidityMeasurement,
+    capabilities.tvocMeasurement,
+    capabilities.tvocHealthConcern,
   },
   zigbee_handlers = {
     global = {},
@@ -74,10 +79,18 @@ local xiaomi_devices_prototype = {
         [0xFF02] = xiaomi_utils.battery_handler,
         [0xFF01] = xiaomi_utils.battery_handler
       }
-    }
+    },
   },
-  sub_drivers = { require("xiaomi_button") }
+  sub_drivers = { require("xiaomi_button"), require("aqara_air_sensor") }
 }
 
+defaults.register_for_default_handlers(
+    xiaomi_devices_prototype,
+    {
+      capabilities.temperatureMeasurement,
+      capabilities.relativeHumidityMeasurement,
+      capabilities.battery
+    }
+)
 local xiaomi_sensors = ZigbeeDriver("xiaomi-devices", xiaomi_devices_prototype)
 xiaomi_sensors:run()
