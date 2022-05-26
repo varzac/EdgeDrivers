@@ -20,8 +20,8 @@ local cosock = require "cosock"
 local discovery = require 'disco'
 local utils = require 'st.utils'
 local http = cosock.asyncify "socket.http"
-local socket = require "socket"
 local ltn12 = require "ltn12"
+local url = require "net.url"
 
 local blockPercent = capabilities["pianobook11249.blockPercent"]
 local blockedQueries = capabilities["pianobook11249.blockedQueries"]
@@ -61,7 +61,7 @@ local function send_query(device, command)
     if not validate_ip_pref(device) or not validate_webpassword_pref(device) then
         return
     end
-    local query = string.format("http://%s/admin/api.php?%s&auth=%s", device.preferences.ipAddress, command, socket.url.escape(device.preferences.webpassword))
+    local query = string.format("http://%s/admin/api.php?%s&%s", device.preferences.ipAddress, command, url.buildQuery({auth = device.preferences.webpassword}))
     local response_body = {}
     local resp, code_or_err, _, status_line = http.request {
         url = query,

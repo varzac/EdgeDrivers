@@ -15,7 +15,8 @@ components:
   categories:
   - name: RemoteController
 preferences:
-  - title: "IP Address"
+  - name: ipAddress
+    title: "IP Address"
     description: "IP address of the Pi-Hole"
     required: true
     preferenceType: string
@@ -23,8 +24,9 @@ preferences:
       minLength: 7
       maxLength: 15
       stringType: text
-      default: ""
-  - title: "Webpassword"
+      default: "192.168.1.255"
+  - name: webpassword
+    title: "Webpassword"
     description: "The webpassword for auth with the Pi-Hole API"
     required: true
     preferenceType: string
