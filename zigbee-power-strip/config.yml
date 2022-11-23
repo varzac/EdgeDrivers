@@ -1,0 +1,4 @@
+name: 'Zigbee Power Strip'
+packageKey: 'zigbee-power-strip'
+permissions:
+  zigbee: {}

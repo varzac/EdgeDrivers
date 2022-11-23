@@ -13,6 +13,8 @@ to accept my invite, enroll your hub, and install any of these drivers.
 * [**PiHole**](pi-hole/README.md): A driver for connecting a PiHole to SmartThings
 * [**Xiaomi Sensors**](xiaomi-sensor/README.md): A driver for one model of Xiaomi motion and
   contact sensors
+* [**Zigbee TS011F Power Strip**](zigbee-power-strip/README.md): A driver for a Zigbee power
+  strip found on Amazon.
 
 ## Contributing
 
