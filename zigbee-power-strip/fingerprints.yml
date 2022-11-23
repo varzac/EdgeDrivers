@@ -1,0 +1,6 @@
+zigbeeManufacturer:
+  - id: "powerstrip"
+    deviceLabel: Zigbee Power Strip
+    manufacturer: _TZ3000_cfnprab5
+    model: TS011F
+    deviceProfileName: simple-switch
